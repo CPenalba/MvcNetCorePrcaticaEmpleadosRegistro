@@ -1,0 +1,75 @@
+﻿@model MvcNetCorePrcaticaEmpleadosRegistro.Models.ModelEmpleadosDepartamento
+
+<h1>Empleados Registro Departamento</h1>
+
+@{
+	var departamento = (Departamento)ViewData["Departamento"];
+	var empleados = ViewData["Empleado"] as List<MvcNetCorePrcaticaEmpleadosRegistro.Models.Empleado>;
+	int totalEmpleados = (int)ViewData["TotalEmpleados"];
+	int posicion = (int)ViewData["Posicion"];
+}
+
+<a class="btn btn-secondary" asp-controller="Practica" asp-action="Index">Volver a departamentos</a>
+
+@if (departamento != null)
+{
+	<ul class="list-group">
+		<li class="list-group-item">
+			Id departamento: @departamento.IdDepartamento
+		</li>
+		<li class="list-group-item">
+			Nombre: @departamento.Nombre
+		</li>
+		<li class="list-group-item">
+			Localidad: @departamento.Localidad
+		</li>
+	</ul>
+
+	@if (empleados != null && empleados.Count > 0)
+	{
+		<h2>Registro @posicion de @totalEmpleados</h2>
+
+		<div>
+			@if (posicion > 1)
+			{
+				<a class="btn btn-primary" asp-action="Details" asp-route-idDepartamento="@departamento.IdDepartamento" asp-route-posicion="@(posicion - 1)">Anterior</a>
+			}
+			@if (posicion < totalEmpleados)
+			{
+				<a class="btn btn-primary" asp-action="Details" asp-route-idDepartamento="@departamento.IdDepartamento" asp-route-posicion="@(posicion + 1)">Siguiente</a>
+			}
+		</div>
+		<hr />
+		<ul class="list-group">
+			@foreach (var empleado in empleados)
+			{
+				<li class="list-group-item">
+					Id empleado: @empleado.IdEmpleado
+				</li>
+				<li class="list-group-item">
+					Apellido: @empleado.Apellido
+				</li>
+				<li class="list-group-item">
+					Oficio: @empleado.Oficio
+				</li>
+				<li class="list-group-item">
+					Salario: @empleado.Salario
+				</li>
+				<li class="list-group-item">
+					Departamento: @empleado.IdDepartamento
+				</li>
+			}
+		</ul>
+
+	}
+	else
+	{
+		<p>No hay empleados en este departamento.</p>
+	}
+}
+else
+{
+	<p>Departamento no encontrado.</p>
+}
+
+
