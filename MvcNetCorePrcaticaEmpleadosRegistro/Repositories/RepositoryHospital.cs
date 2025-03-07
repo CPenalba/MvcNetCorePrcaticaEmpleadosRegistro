@@ -51,27 +51,16 @@ namespace MvcNetCorePrcaticaEmpleadosRegistro.Repositories
             SqlParameter pamRegistros = new SqlParameter("@registros", 0);
             pamRegistros.Direction = ParameterDirection.Output;
 
-            // Realizar la consulta y obtener la lista de empleados directamente de la base de datos
-            var empleados = await this.context.Empleados
-                                              .FromSqlRaw(sql, pamPosicion, pamIdDepartamento, pamRegistros)
-                                              .ToListAsync();  // Ahora se usa ToListAsync() sobre un IQueryable
-
-            Departamento departamento = await this.context.Departamentos
-                                                          .Where(d => d.IdDepartamento == idDepartamento)
-                                                          .FirstOrDefaultAsync();
-
+            Departamento dpto = await this.FindDepartamentoAsync(idDepartamento);
+            var consulta = this.context.Empleados.FromSqlRaw(sql, pamPosicion, pamIdDepartamento, pamRegistros);
+            List<Empleado> empleados = await consulta.ToListAsync();
             int registros = int.Parse(pamRegistros.Value.ToString());
-
-
             return new ModelEmpleadosDepartamento
             {
-                Departamento = departamento,
-                Empleado = empleados,  // Ahora Empleado es una lista de empleados
-                NumeroRegistros = registros,
-                Posicion = posicion
+                Departamento = dpto,
+                Empleado = empleados,
+                NumeroRegistros = registros
             };
         }
-
-
     }
 }

@@ -1,75 +1,67 @@
-﻿@model MvcNetCorePrcaticaEmpleadosRegistro.Models.ModelEmpleadosDepartamento
-
-<h1>Empleados Registro Departamento</h1>
+﻿@model ModelEmpleadosDepartamento
 
 @{
-	var departamento = (Departamento)ViewData["Departamento"];
-	var empleados = ViewData["Empleado"] as List<MvcNetCorePrcaticaEmpleadosRegistro.Models.Empleado>;
-	int totalEmpleados = (int)ViewData["TotalEmpleados"];
-	int posicion = (int)ViewData["Posicion"];
+    int numRegistros = 0;
+    int posicion = 1;
+    int dept = 0;
+    if (ViewData["REGISTROS"] != null)
+    {
+        numRegistros = (int)ViewData["REGISTROS"];
+        dept = (int)ViewData["DEPARTAMENTO"];
+        posicion = (int)ViewData["POSICION"];
+    }
 }
+<h1>Empleados Registro Departamento</h1>
 
-<a class="btn btn-secondary" asp-controller="Practica" asp-action="Index">Volver a departamentos</a>
+<p>
+	<a asp-controller="Practica" asp-action="Index">Volver a departamentos</a>
+</p>
 
-@if (departamento != null)
-{
+@if(Model != null){
 	<ul class="list-group">
-		<li class="list-group-item">
-			Id departamento: @departamento.IdDepartamento
-		</li>
-		<li class="list-group-item">
-			Nombre: @departamento.Nombre
-		</li>
-		<li class="list-group-item">
-			Localidad: @departamento.Localidad
-		</li>
+		<li class="list-group-item list-group-item-danger">IdDepartamento: @Model.Departamento.IdDepartamento</li>
+        <li class="list-group-item list-group-item-info">Nombre: @Model.Departamento.Nombre</li>
+        <li class="list-group-item list-group-item-info">Localidad: @Model.Departamento.Localidad</li>
 	</ul>
 
-	@if (empleados != null && empleados.Count > 0)
-	{
-		<h2>Registro @posicion de @totalEmpleados</h2>
+	<h1>Registro @posicion de @Model.NumeroRegistros</h1>
 
-		<div>
-			@if (posicion > 1)
-			{
-				<a class="btn btn-primary" asp-action="Details" asp-route-idDepartamento="@departamento.IdDepartamento" asp-route-posicion="@(posicion - 1)">Anterior</a>
-			}
-			@if (posicion < totalEmpleados)
-			{
-				<a class="btn btn-primary" asp-action="Details" asp-route-idDepartamento="@departamento.IdDepartamento" asp-route-posicion="@(posicion + 1)">Siguiente</a>
-			}
-		</div>
-		<hr />
-		<ul class="list-group">
-			@foreach (var empleado in empleados)
-			{
-				<li class="list-group-item">
-					Id empleado: @empleado.IdEmpleado
-				</li>
-				<li class="list-group-item">
-					Apellido: @empleado.Apellido
-				</li>
-				<li class="list-group-item">
-					Oficio: @empleado.Oficio
-				</li>
-				<li class="list-group-item">
-					Salario: @empleado.Salario
-				</li>
-				<li class="list-group-item">
-					Departamento: @empleado.IdDepartamento
-				</li>
-			}
-		</ul>
+    <div>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">
+                <a asp-controller="Practica" asp-action="Details" asp-route-idDepartamento="@dept" asp-route-posicion="1">Primero</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Practica" asp-action="Details" asp-route-idDepartamento="@dept" asp-route-posicion="@ViewData["ANTERIOR"]">Anterior</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Practica" asp-action="Details" asp-route-idDepartamento="@dept" asp-route-posicion="@ViewData["SIGUIENTE"]">Siguiente</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Practica" asp-action="Details" asp-route-idDepartamento="@dept" asp-route-posicion="@ViewData["ULTIMO"]">Ultimo</a>
+            </li>
+        </ul>
+    </div>
+    <hr/>
+    <ul class="list-group">
+        @foreach (Empleado emp in Model.Empleado)
+        {
+            <li class="list-group-item list-group-item-info">
+                Id Empleado: @emp.IdEmpleado
+            </li>
+            <li class="list-group-item list-group-item-info">
+                Apellido: @emp.Apellido
+            </li>
+            <li class="list-group-item list-group-item-info">
+                Oficio: @emp.Oficio
+            </li>
+            <li class="list-group-item list-group-item-info">
+                Salario: @emp.Salario
+            </li>
+            <li class="list-group-item list-group-item-info">
+                Departamento: @emp.IdDepartamento
+            </li>
+        }
+    </ul>
 
-	}
-	else
-	{
-		<p>No hay empleados en este departamento.</p>
-	}
 }
-else
-{
-	<p>Departamento no encontrado.</p>
-}
-
-

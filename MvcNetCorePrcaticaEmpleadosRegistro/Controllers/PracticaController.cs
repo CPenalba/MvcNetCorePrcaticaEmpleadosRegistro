@@ -27,23 +27,24 @@ namespace MvcNetCorePrcaticaEmpleadosRegistro.Controllers
                 posicion = 1;
             }
 
-            // Traer el departamento
-            Departamento departamento = await this.repo.FindDepartamentoAsync(idDepartamento);
-
-            // Traer los empleados y el total de registros
             ModelEmpleadosDepartamento model = await this.repo.GetEmpleadosDepartamentoOutAsync(posicion.Value, idDepartamento);
-
-            
-
-            // Asignar los datos a la vista
-            ViewData["Departamento"] = departamento;
-            ViewData["Empleado"] = model.Empleado;
-            ViewData["TotalEmpleados"] = model.NumeroRegistros;
-            ViewData["Posicion"] = model.Posicion;
-
+            ViewData["REGISTROS"] = model.NumeroRegistros;
+            ViewData["POSICION"] = posicion;
+            int siguiente = posicion.Value + 1;
+            if (siguiente > model.NumeroRegistros)
+            {
+                siguiente = model.NumeroRegistros;
+            }
+            int anterior = posicion.Value - 1;
+            if (anterior < 1)
+            {
+                anterior = 1;
+            }
+            ViewData["ULTIMO"] = model.NumeroRegistros;
+            ViewData["SIGUIENTE"] = siguiente;
+            ViewData["ANTERIOR"] = anterior;
+            ViewData["DEPARTAMENTO"] = model.Departamento.IdDepartamento;
             return View(model);
         }
-
-
     }
 }
